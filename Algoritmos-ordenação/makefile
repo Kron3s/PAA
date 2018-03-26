@@ -1,0 +1,15 @@
+# makefile do codigo de ordenação 
+
+all:Ordenacao
+Ordenacao:	Ordenacao.o	main.o
+gcc	-o	main	Ordenacao.o	main.o
+Ordenacao.o:	Ordenacao.c
+			gcc -o Ordenacao.o	-c	Ordenacao.c	-W -Wall	-ansi	-pedantic
+main.o:main.c Ordenacao.h
+			gcc	-o	main.o	-c	main.c	-W -Wall -ansi -pedantic
+
+clean:
+		rm	-rf	*.o
+mrproper: clean
+		rm	-rf	Ordenacao					
+
