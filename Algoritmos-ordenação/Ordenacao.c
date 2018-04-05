@@ -14,7 +14,7 @@
     //funçao auxilar do quicksort que faz a partição do vetor
     int partition(int *arr,int begin,int end){
         int q  =(begin-1);
-        printf("%d\n",q);
+        //printf("%d\n",q);
         int v = arr[end];
         int i;
         for(i = begin; i <=end-1;i++){
@@ -32,7 +32,7 @@
 
         }
 // funcao auxilar do mergesort, junta dois sub vetores do vet[]
- int merge(int vet[],int inicio,int m,int fim){
+ int merge(int vet[],int inicio,int m,int fim,int conta[]){
         //printf("entrou no merge\n");
     int i,j,k;
     int n1 = (m-inicio)+1;
@@ -56,10 +56,13 @@
     if(L[i]<= R[j]){
         vet[k] = L[i];
         i++;
+        conta[1]++;
     }else{
         vet[k] = R[j];
         j++;
+        conta[1]++;
     }
+    conta[0]++;
     k++;
     }
     //printf("terminou o merge\n");
@@ -77,53 +80,58 @@
 
     }
 
-void BubbleSort(int vetor[],int n){
+void BubbleSort(int vetor[],int n,int conta[]){
     int i,j;
-    printf("bubble");
+   
     for(i = 0;i < n ; i++){
         for(j = n-1;j>= (i+1);j--) { 
+            conta[0]++;
             if(vetor[j]<vetor[j-1]){
             swap(&vetor[j],&vetor[j-1]);
-            
+             conta[1]++;
             }
         }
     }
 }
 
-void SelectSort(int vetor[],int n){
+void SelectSort(int vetor[],int n,int conta[]){
     int i, j , small;
     for(i = 0 ;i<n;i++){
         small = i;
         for(j = i+1;j <n;j++){
+            conta[0]++
             if(vetor[j] < vetor[small]){
                 swap(&vetor[j],&vetor[small]);
+                conta[1]++;
             
             }  
         }
     }
 }
 
-void InsertSort(int vetor[],int n){
+void InsertSort(int vetor[],int n,int conta[]){
     int i,j,key;
     for(j =1;j <n;j++){
         key = vetor[j];
         i = j-1;
+        conta[0]++;
         while(i>=0 && vetor[i] > key){
             vetor[i+1] = vetor[i];
             i = i-1;
+            conta[1]++;
         }
         vetor[i+1] = key;
     }
 }
 
-void MergeSort(int vet[],int inicio,int fim){
+void MergeSort(int vet[],int inicio,int fim,int conta[]){
         if(inicio <fim){
             int m  =inicio+(fim-inicio)/2;
             
-            MergeSort(vet,inicio,m);
-            MergeSort(vet,m+1,fim);
+            MergeSort(vet,inicio,m,conta);
+            MergeSort(vet,m+1,fim,conta);
             
-            merge(vet,inicio,m,fim);
+            merge(vet,inicio,m,fim,conta);
     
 
         }
@@ -137,4 +145,94 @@ void quickSort(int arr[],int begin,int end){
         quickSort(arr,begin,q-1);
         quickSort(arr,q+1,end);
     }
+}
+//cria vetor ordenado
+void InsereVetorOrdenado(int *arr,int n){
+    int i;
+    for(i=0;i<n;i++){
+        arr[i]=i+1;
+    }
+}
+// cria vetor invertido exp: 100,99,98,97...
+void InsereVetorInverso(int *arr,int n){
+    int i;
+    for(i = n-1;i>=0;i--){
+        arr[i]=i+1;
+    }
+}
+// cria vetor desordenado
+void Insere_desordenado(int *arr,int n){
+    int i;
+    srand(time(NULL));
+    for(i = 0;i<n;i++){
+        arr[i] = rand()%1000;
+    }
+}
+// funcao para escolher qual dos algoritmos de ordenaçao usar
+void Escolhe(int arr[],int n,int op,int conta[]){
+    clock_t start,end;
+    double cpu_time;
+   start = clock();
+    switch(op){
+        case 1:        BubbleSort(arr,n,conta);
+                        break;
+        case 2:        SelectSort(arr,n,conta);
+                        break;
+        case 3:        InsertSort(arr,n,conta);                 
+                        break;
+        case 4:        MergeSort(arr,0,(n-1));
+                        break;
+
+        case 5:        quickSort(arr,0,(n-1));
+                        break;
+        default :      printf("opcao invalida\n");                        
+
+
+    }
+
+    end = clock();
+    cpu_time = ((double)(end - start))/CLOCKS_PER_SEC;
+    printf("o tempo de execução foi: %f ", cpu_time);
+}
+//funcao para escolhar o tipo do vetor : ordenado,desordenado,invertido
+void Preenche(int arr[], int n, int op){
+     switch(op){
+         case 1:    InsereVetorOrdenado(arr,n); break;
+
+         case 2:    Insere_desordenado(arr,n); break;
+
+         case 3:    InsereVetorInverso(arr,n); break;
+         
+         default:   printf("opicao invalida\n");
+     }   
+
+}
+
+void menu(){
+
+ int op1,op2,n,conta[2];
+ printf("######################################\n");
+ printf("Escolha o tamanho do vetor:\n");
+ printf("1000|2000|3000|5000|10000|20000|30000|50000|100000\n");
+ scanf("%d",&n);
+puts("\n");
+printf("escolha o tipo do vetor: 1:Ordenado |2: Desordenado |3:Invertido\n");
+scanf("%d",&op1);
+int array[n];
+printf("\nescolha o metodo de ordenação: 1: BubbleSort|2: SelectSort |3: InsertSort|4: MergeSort|5: QuickSort\n");
+scanf("%d",&op2);
+conta[0] =0; // para contar a quantidade de comparações 
+conta[1] = 0; // para contar as trocas
+Preenche(array,n,op1);
+Escolhe(array,n,op2,conta);
+
+
+
+
+
+ 
+
+
+ 
+
 }
