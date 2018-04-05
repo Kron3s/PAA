@@ -32,7 +32,7 @@
 
         }
 // funcao auxilar do mergesort, junta dois sub vetores do vet[]
- int merge(int vet[],int inicio,int m,int fim){
+ int merge(int vet[],int inicio,int m,int fim,int conta[]){
         //printf("entrou no merge\n");
     int i,j,k;
     int n1 = (m-inicio)+1;
@@ -56,10 +56,13 @@
     if(L[i]<= R[j]){
         vet[k] = L[i];
         i++;
+        conta[1]++;
     }else{
         vet[k] = R[j];
         j++;
+        conta[1]++;
     }
+    conta[0]++;
     k++;
     }
     //printf("terminou o merge\n");
@@ -82,9 +85,10 @@ void BubbleSort(int vetor[],int n,int conta[]){
    
     for(i = 0;i < n ; i++){
         for(j = n-1;j>= (i+1);j--) { 
+            conta[0]++;
             if(vetor[j]<vetor[j-1]){
             swap(&vetor[j],&vetor[j-1]);
-            
+             conta[1]++;
             }
         }
     }
@@ -95,8 +99,10 @@ void SelectSort(int vetor[],int n,int conta[]){
     for(i = 0 ;i<n;i++){
         small = i;
         for(j = i+1;j <n;j++){
+            conta[0]++
             if(vetor[j] < vetor[small]){
                 swap(&vetor[j],&vetor[small]);
+                conta[1]++;
             
             }  
         }
@@ -108,22 +114,24 @@ void InsertSort(int vetor[],int n,int conta[]){
     for(j =1;j <n;j++){
         key = vetor[j];
         i = j-1;
+        conta[0]++;
         while(i>=0 && vetor[i] > key){
             vetor[i+1] = vetor[i];
             i = i-1;
+            conta[1]++;
         }
         vetor[i+1] = key;
     }
 }
 
-void MergeSort(int vet[],int inicio,int fim){
+void MergeSort(int vet[],int inicio,int fim,int conta[]){
         if(inicio <fim){
             int m  =inicio+(fim-inicio)/2;
             
-            MergeSort(vet,inicio,m);
-            MergeSort(vet,m+1,fim);
+            MergeSort(vet,inicio,m,conta);
+            MergeSort(vet,m+1,fim,conta);
             
-            merge(vet,inicio,m,fim);
+            merge(vet,inicio,m,fim,conta);
     
 
         }
@@ -213,8 +221,8 @@ scanf("%d",&op1);
 int array[n];
 printf("\nescolha o metodo de ordenação: 1: BubbleSort|2: SelectSort |3: InsertSort|4: MergeSort|5: QuickSort\n");
 scanf("%d",&op2);
-conta[0] =0;
-conta[1] = 0;
+conta[0] =0; // para contar a quantidade de comparações 
+conta[1] = 0; // para contar as trocas
 Preenche(array,n,op1);
 Escolhe(array,n,op2,conta);
 
