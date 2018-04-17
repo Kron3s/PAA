@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include<stdlib.h>
-
+#include <string.h>
 #include "Ordenacao.h"
 
 //funcao  para trocar as posições #
@@ -12,16 +12,17 @@
     *sp = aux;
     }
     //funçao auxilar do quicksort que faz a partição do vetor
-    int partition(int *arr,int begin,int end){
+    int partition(int *arr,int begin,int end, int conta []){
         int q  =(begin-1);
         //printf("%d\n",q);
         int v = arr[end];
         int i;
         for(i = begin; i <=end-1;i++){
+               conta[0]++;
             if(arr[i] <= v){
                     q++;
             swap(&arr[i],&arr[q]);
-            
+              conta[1]++;
             }
         
 
@@ -32,7 +33,7 @@
 
         }
 // funcao auxilar do mergesort, junta dois sub vetores do vet[]
- int merge(int vet[],int inicio,int m,int fim,int conta[]){
+ void  merge(int vet[],int inicio,int m,int fim,int conta[]){
         //printf("entrou no merge\n");
     int i,j,k;
     int n1 = (m-inicio)+1;
@@ -99,7 +100,7 @@ void SelectSort(int vetor[],int n,int conta[]){
     for(i = 0 ;i<n;i++){
         small = i;
         for(j = i+1;j <n;j++){
-            conta[0]++
+            conta[0]++;
             if(vetor[j] < vetor[small]){
                 swap(&vetor[j],&vetor[small]);
                 conta[1]++;
@@ -138,12 +139,12 @@ void MergeSort(int vet[],int inicio,int fim,int conta[]){
     
 }
 
-void quickSort(int arr[],int begin,int end){
+void quickSort(int arr[],int begin,int end, int conta []){
     
     if(begin < end){
-        int q = partition(arr,begin,end);
-        quickSort(arr,begin,q-1);
-        quickSort(arr,q+1,end);
+        int q = partition(arr,begin,end,conta);
+        quickSort(arr,begin,q-1,conta);
+        quickSort(arr,q+1,end,conta);
     }
 }
 //cria vetor ordenado
@@ -169,7 +170,7 @@ void Insere_desordenado(int *arr,int n){
     }
 }
 // funcao para escolher qual dos algoritmos de ordenaçao usar
-void Escolhe(int arr[],int n,int op,int conta[]){
+double Escolhe(int arr[],int n,int op,int conta[]){
     clock_t start,end;
     double cpu_time;
    start = clock();
@@ -180,10 +181,10 @@ void Escolhe(int arr[],int n,int op,int conta[]){
                         break;
         case 3:        InsertSort(arr,n,conta);                 
                         break;
-        case 4:        MergeSort(arr,0,(n-1));
+        case 4:        MergeSort(arr,0,(n-1),conta);
                         break;
 
-        case 5:        quickSort(arr,0,(n-1));
+        case 5:        quickSort(arr,0,(n-1),conta);
                         break;
         default :      printf("opcao invalida\n");                        
 
@@ -192,7 +193,9 @@ void Escolhe(int arr[],int n,int op,int conta[]){
 
     end = clock();
     cpu_time = ((double)(end - start))/CLOCKS_PER_SEC;
-    printf("o tempo de execução foi: %f ", cpu_time);
+    //printf("o tempo de execução foi: %f\n ", cpu_time);
+   // printf("quantidade de comparacao %d\n",conta[0]);
+   return cpu_time;
 }
 //funcao para escolhar o tipo do vetor : ordenado,desordenado,invertido
 void Preenche(int arr[], int n, int op){
@@ -208,31 +211,149 @@ void Preenche(int arr[], int n, int op){
 
 }
 
-void menu(){
-
- int op1,op2,n,conta[2];
- printf("######################################\n");
- printf("Escolha o tamanho do vetor:\n");
- printf("1000|2000|3000|5000|10000|20000|30000|50000|100000\n");
- scanf("%d",&n);
-puts("\n");
-printf("escolha o tipo do vetor: 1:Ordenado |2: Desordenado |3:Invertido\n");
-scanf("%d",&op1);
-int array[n];
-printf("\nescolha o metodo de ordenação: 1: BubbleSort|2: SelectSort |3: InsertSort|4: MergeSort|5: QuickSort\n");
-scanf("%d",&op2);
-conta[0] =0; // para contar a quantidade de comparações 
-conta[1] = 0; // para contar as trocas
-Preenche(array,n,op1);
-Escolhe(array,n,op2,conta);
-
-
-
-
-
- 
-
-
- 
+// op1 é o algoritmo escolhido , op2 é o é tipo do vetor escolhido
+void teste(int ordem,int tipo, int n){
+   // printf("entrou no teste");
+    int vet[n];
+    int conta[2];  // conta[0] comparações  conta[1] trocas
+    conta[0] =0;
+    conta[1] = 0;
+    double cpu_time ;
+    Preenche(vet,n,ordem);
+  cpu_time =  Escolhe(vet,n,tipo,conta);
+  //printf("tempo de cpu %lf",cpu_time);
+    resultado(cpu_time,conta,ordem,tipo,n);
 
 }
+    
+
+void resultado(double cptime,int conta[],int ordenacao,int tipo,int length){
+   char algoritmo[100];
+   char ordem[100];
+   char filename[200];
+   strcpy(filename, "");
+   switch(tipo){
+       case 1: strcpy(algoritmo,"BubbleSort");
+                break;
+       
+       case 2:
+                  strcpy(algoritmo, "SelectSort");
+           break;
+       case 3:
+           strcpy(algoritmo, "InsertSort");
+            break;
+       case 4:
+           strcpy(algoritmo, "MergeSort");
+           break;
+
+       case 5:
+           strcpy(algoritmo, "QuickSort");
+            break;
+       default: puts("opcao invalida");     
+           
+   }
+   
+
+   switch (ordenacao)
+   {
+   case 1:
+       strcpy(ordem, "/resultado/ordenado/ordenado");
+       break;
+   case 2:
+       strcpy(ordem, "/resultado/desordenado/desordenado");
+       break;
+   case 3:
+       strcpy(ordem, "/resultado/invertido/invertido");
+       break;
+   default:
+       puts("opcao invalida");
+                  
+}
+
+
+strcat(filename,ordem);
+strcat(filename,algoritmo);
+
+//printf("%s\n",);
+// tempo de execução
+char file_time[200];
+char cwd[1024];
+getcwd(cwd,sizeof(cwd));
+
+strcpy(file_time,"");
+strcpy(file_time,cwd);
+strcat(file_time,filename);
+strcat(file_time,"Time.txt");
+
+//printf("%s\n",file_time);
+
+char aux[100];
+FILE *ft  = fopen(file_time,"a+");
+
+if(ft != NULL){
+    fgets(aux, 100, ft);
+    if (strcmp(aux, "length\t cpu_time\n")!=0)
+        fprintf(ft, "length\t cpu_time\n");
+   fprintf(ft, "%d\t    %lf\n", length, cptime);
+    
+}
+fclose(ft);
+//printf("%s\n", file_time);
+//comparacao e trocas
+char file_trocas[200];
+strcpy(file_trocas,"");
+strcpy(file_trocas,cwd);
+strcat(file_trocas, filename);
+strcat(file_trocas, "TrocasComparacao.txt");
+//printf("%s",file_trocas);
+char aux2[100];
+FILE * ftc = fopen(file_trocas, "a+");
+if(ftc != NULL){
+    fgets(aux2,100,ftc);
+    if(strcmp(aux2,"comparacoes\t trocas\n")!=0)
+        fprintf(ftc, "comparacoes\t trocas\n");
+    fprintf(ftc,"%d\t %d\n",conta[0],conta[1]);
+}
+fclose(ftc);
+
+}  
+
+void menu(){
+
+ int ordem;
+ int metodo;
+ printf("######################################\n");
+printf("escolha o tipo do vetor: 1:Ordenado |2: Desordenado |3:Invertido\n");
+scanf("%d",&ordem);
+printf("\nescolha o metodo de ordenação: 1: BubbleSort|2: SelectSort |3: InsertSort|4: MergeSort|5: QuickSort\n");
+
+scanf("%d",&metodo);
+//printf("depois de pegar o valor %d",metodo);
+ // para contar a quantidade de comparações 
+// para contar as trocas
+//Preenche(array,n,op1);
+//Escolhe(array,n,op2,conta);
+
+teste(ordem,metodo,100);
+teste(ordem,metodo,500);
+teste(ordem,metodo,1000);
+teste(ordem,metodo,2000);
+teste(ordem,metodo,3000);
+teste(ordem,metodo,5000);
+teste(ordem,metodo,10000);
+teste(ordem,metodo,20000);
+teste(ordem,metodo,30000);
+teste(ordem,metodo,50000);
+teste(ordem,metodo,100000);
+teste(ordem,metodo,200000);
+teste(ordem,metodo,300000);
+teste(ordem,metodo,500000);
+teste(ordem,metodo,1000000);
+}
+
+ 
+
+
+ 
+
+
