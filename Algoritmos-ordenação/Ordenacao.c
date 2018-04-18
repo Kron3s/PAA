@@ -12,7 +12,7 @@
     *sp = aux;
     }
     //funçao auxilar do quicksort que faz a partição do vetor
-    int partition(int *arr,int begin,int end, int conta []){
+    int partition(int *arr,int begin,int end, long int conta []){
         int q  =(begin-1);
         //printf("%d\n",q);
         int v = arr[end];
@@ -33,7 +33,7 @@
 
         }
 // funcao auxilar do mergesort, junta dois sub vetores do vet[]
- void  merge(int vet[],int inicio,int m,int fim,int conta[]){
+ void  merge(int vet[],int inicio,int m,int fim,long int conta[]){
         //printf("entrou no merge\n");
     int i,j,k;
     int n1 = (m-inicio)+1;
@@ -81,7 +81,7 @@
 
     }
 
-void BubbleSort(int vetor[],int n,int conta[]){
+void BubbleSort(int vetor[],int n,long  int conta[]){
     int i,j;
    
     for(i = 0;i < n ; i++){
@@ -95,7 +95,7 @@ void BubbleSort(int vetor[],int n,int conta[]){
     }
 }
 
-void SelectSort(int vetor[],int n,int conta[]){
+void SelectSort(int vetor[],int n,long int conta[]){
     int i, j , small;
     for(i = 0 ;i<n;i++){
         small = i;
@@ -110,7 +110,7 @@ void SelectSort(int vetor[],int n,int conta[]){
     }
 }
 
-void InsertSort(int vetor[],int n,int conta[]){
+void InsertSort(int vetor[],int n,long int conta[]){
     int i,j,key;
     for(j =1;j <n;j++){
         key = vetor[j];
@@ -125,7 +125,7 @@ void InsertSort(int vetor[],int n,int conta[]){
     }
 }
 
-void MergeSort(int vet[],int inicio,int fim,int conta[]){
+void MergeSort(int vet[],int inicio,int fim,long int conta[]){
         if(inicio <fim){
             int m  =inicio+(fim-inicio)/2;
             
@@ -139,7 +139,7 @@ void MergeSort(int vet[],int inicio,int fim,int conta[]){
     
 }
 
-void quickSort(int arr[],int begin,int end, int conta []){
+void quickSort(int arr[],int begin,int end,long  int conta []){
     
     if(begin < end){
         int q = partition(arr,begin,end,conta);
@@ -170,7 +170,7 @@ void Insere_desordenado(int *arr,int n){
     }
 }
 // funcao para escolher qual dos algoritmos de ordenaçao usar
-double Escolhe(int arr[],int n,int op,int conta[]){
+double Escolhe(int arr[],int n,int op,long  int conta[]){
     clock_t start,end;
     double cpu_time;
    start = clock();
@@ -215,7 +215,7 @@ void Preenche(int arr[], int n, int op){
 void teste(int ordem,int tipo, int n){
    // printf("entrou no teste");
     int vet[n];
-    int conta[2];  // conta[0] comparações  conta[1] trocas
+   long  int conta[2];  // conta[0] comparações  conta[1] trocas
     conta[0] =0;
     conta[1] = 0;
     double cpu_time ;
@@ -227,7 +227,7 @@ void teste(int ordem,int tipo, int n){
 }
     
 
-void resultado(double cptime,int conta[],int ordenacao,int tipo,int length){
+void resultado(double cptime, long  int conta[],  int ordenacao,int tipo,int length){
    char algoritmo[100];
    char ordem[100];
    char filename[200];
@@ -263,7 +263,7 @@ void resultado(double cptime,int conta[],int ordenacao,int tipo,int length){
        strcpy(ordem, "/resultado/desordenado/desordenado");
        break;
    case 3:
-       strcpy(ordem, "/resultado/invertido/invertido");
+       strcpy(ordem, "/resultado/decrescente/decrescente");
        break;
    default:
        puts("opcao invalida");
@@ -289,11 +289,11 @@ strcat(file_time,"Time.txt");
 
 char aux[100];
 FILE *ft  = fopen(file_time,"a+");
-
+strcat(algoritmo,"\n");
 if(ft != NULL){
     fgets(aux, 100, ft);
-    if (strcmp(aux, "length\t cpu_time\n")!=0)
-        fprintf(ft, "length\t cpu_time\n");
+    if (strcmp(aux,algoritmo) != 0)
+        fputs(algoritmo,ft);
    fprintf(ft, "%d\t    %lf\n", length, cptime);
     
 }
@@ -312,7 +312,7 @@ if(ftc != NULL){
     fgets(aux2,100,ftc);
     if(strcmp(aux2,"comparacoes\t trocas\n")!=0)
         fprintf(ftc, "comparacoes\t trocas\n");
-    fprintf(ftc,"%d\t %d\n",conta[0],conta[1]);
+    fprintf(ftc,"%ld\t %ld\n",conta[0],conta[1]);
 }
 fclose(ftc);
 
@@ -323,7 +323,7 @@ void menu(){
  int ordem;
  int metodo;
  printf("######################################\n");
-printf("escolha o tipo do vetor: 1:Ordenado |2: Desordenado |3:Invertido\n");
+printf("escolha o tipo do vetor: 1:Ordenado |2: Desordenado |3:Decrescente\n");
 scanf("%d",&ordem);
 printf("\nescolha o metodo de ordenação: 1: BubbleSort|2: SelectSort |3: InsertSort|4: MergeSort|5: QuickSort\n");
 
