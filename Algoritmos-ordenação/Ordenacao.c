@@ -12,7 +12,7 @@
     *sp = aux;
     }
     //funçao auxilar do quicksort que faz a partição do vetor
-    int partition(int *arr,int begin,int end, long int conta []){
+  /*  int partition(int *arr,int begin,int end, long int conta []){
         int q  =(begin-1);
         //printf("%d\n",q);
         int v = arr[end];
@@ -32,6 +32,7 @@
         return (q+1);
 
         }
+        */
 // funcao auxilar do mergesort, junta dois sub vetores do vet[]
  void  merge(int vet[],int inicio,int m,int fim,long int conta[]){
         //printf("entrou no merge\n");
@@ -384,6 +385,7 @@ teste(ordem,metodo,200000);
 teste(ordem,metodo,300000);
 teste(ordem,metodo,500000);
 teste(ordem,metodo,1000000);
+
 }
 
  
