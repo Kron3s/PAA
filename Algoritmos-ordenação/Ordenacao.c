@@ -293,13 +293,13 @@ void resultado(double cptime, long  int conta[],  int ordenacao,int tipo,int len
    switch (ordenacao)
    {
    case 1:
-       strcpy(ordem, "/resultado/ordenado/ordenado");
+       strcpy(ordem, "/resultado/ordenado/");
        break;
    case 2:
-       strcpy(ordem, "/resultado/desordenado/desordenado");
+       strcpy(ordem, "/resultado/desordenado/");
        break;
    case 3:
-       strcpy(ordem, "/resultado/decrescente/decrescente");
+       strcpy(ordem, "/resultado/decrescente/");
        break;
    default:
        puts("opcao invalida");
