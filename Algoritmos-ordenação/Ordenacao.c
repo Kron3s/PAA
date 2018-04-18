@@ -12,7 +12,7 @@
     *sp = aux;
     }
     //funçao auxilar do quicksort que faz a partição do vetor
-    int partition(int *arr,int begin,int end, long int conta []){
+  /*  int partition(int *arr,int begin,int end, long int conta []){
         int q  =(begin-1);
         //printf("%d\n",q);
         int v = arr[end];
@@ -32,6 +32,7 @@
         return (q+1);
 
         }
+        */
 // funcao auxilar do mergesort, junta dois sub vetores do vet[]
  void  merge(int vet[],int inicio,int m,int fim,long int conta[]){
         //printf("entrou no merge\n");
@@ -140,13 +141,44 @@ void MergeSort(int vet[],int inicio,int fim,long int conta[]){
 }
 
 void quickSort(int arr[],int begin,int end,long  int conta []){
-    
-    if(begin < end){
-        int q = partition(arr,begin,end,conta);
-        quickSort(arr,begin,q-1,conta);
-        quickSort(arr,q+1,end,conta);
+    int i, j, x, y;
+
+    i = begin;
+    j = end;
+    x = arr[(begin + end) / 2];
+
+    while (i <= j)
+    {
+        while (arr[i] < x && i < end)
+        {
+            i++;
+        }
+        while (arr[j] > x && j > begin)
+        {
+            j--;
+        }
+        if (i <= j)
+        {
+            y = arr[i];
+            arr[i] = arr[j];
+            arr[j] = y;
+            i++;
+            j--;
+            conta[1]++;
+        }
+        conta[0]++;
+    }
+
+    if (j > begin)
+    {
+        quickSort(arr, begin, j,conta);
+    }
+    if (i < end)
+    {
+        quickSort(arr, i, end, conta);
     }
 }
+
 //cria vetor ordenado
 void InsereVetorOrdenado(int *arr,int n){
     int i;
@@ -222,6 +254,10 @@ void teste(int ordem,int tipo, int n){
     Preenche(vet,n,ordem);
   cpu_time =  Escolhe(vet,n,tipo,conta);
   //printf("tempo de cpu %lf",cpu_time);
+  //int i;
+  /*if(n < 101){
+    for(i = 0;i<n;i++)
+      printf("%d",vet[i]);}*/
     resultado(cpu_time,conta,ordem,tipo,n);
 
 }
@@ -349,6 +385,7 @@ teste(ordem,metodo,200000);
 teste(ordem,metodo,300000);
 teste(ordem,metodo,500000);
 teste(ordem,metodo,1000000);
+
 }
 
  
