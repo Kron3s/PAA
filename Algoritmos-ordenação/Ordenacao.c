@@ -11,28 +11,29 @@
     *fp = *sp;
     *sp = aux;
     }
-    //funçao auxilar do quicksort que faz a partição do vetor
-  /*  int partition(int *arr,int begin,int end, long int conta []){
-        int q  =(begin-1);
-        //printf("%d\n",q);
-        int v = arr[end];
+    ///funçao auxilar do quicksort que faz a partição do vetor
+    int partition(int *arr,int begin,int end, long int conta []){
         int i;
-        for(i = begin; i <=end-1;i++){
-               conta[0]++;
-            if(arr[i] <= v){
-                    q++;
-            swap(&arr[i],&arr[q]);
+        int p;
+        int firsthigh;
+        p = end;
+        firsthigh = begin;
+        for(i = 1;i< end;i++){
+            conta[0]++;
+          if(arr[i]< arr[p]){
               conta[1]++;
-            }
+              swap(&arr[i],&arr[firsthigh]);
+              firsthigh++;
+          }
         
 
+        }
+        conta[1]++;
+        swap(&arr[p],&arr[firsthigh]);
+        return (firsthigh);
 
         }
-        swap(&arr[q+1],&arr[end]);
-        return (q+1);
-
-        }
-        */
+        
 // funcao auxilar do mergesort, junta dois sub vetores do vet[]
  void  merge(int vet[],int inicio,int m,int fim,long int conta[]){
         //printf("entrou no merge\n");
@@ -140,57 +141,60 @@ void MergeSort(int vet[],int inicio,int fim,long int conta[]){
     
 }
 
-void quickSort(int arr[],int begin,int end,long  int conta []){
-    int i, j, x, y;
+void quickSort(int arr[],int left,int right,long  int conta []){
+    
+        int i, j, x, y;
 
-    i = begin;
-    j = end;
-    x = arr[(begin + end) / 2];
+        i = left;
+        j = right;
+        x = arr[(left + right) / 2];
 
-    while (i <= j)
-    {
-        while (arr[i] < x && i < end)
+        while (i <= j)
         {
-            i++;
+            while (arr[i] < x && i < right)
+            {
+                i++;
+            }
+            while (arr[j] > x && j > left)
+            {
+                j--;
+            }
+            if (i <= j)
+            {
+                y = arr[i];
+                arr[i] = arr[j];
+                arr[j] = y;
+                i++;
+                j--;
+                conta[1]++;
+            }
+            conta[0]++;
         }
-        while (arr[j] > x && j > begin)
+
+        if (j > left)
         {
-            j--;
+            quickSort(arr, left, j,conta);
         }
-        if (i <= j)
+        if (i < right)
         {
-            y = arr[i];
-            arr[i] = arr[j];
-            arr[j] = y;
-            i++;
-            j--;
-            conta[1]++;
+            quickSort(arr, i, right,conta);
         }
-        conta[0]++;
     }
 
-    if (j > begin)
+    //cria vetor ordenado
+    void InsereVetorOrdenado(int *arr, int n)
     {
-        quickSort(arr, begin, j,conta);
-    }
-    if (i < end)
-    {
-        quickSort(arr, i, end, conta);
-    }
-}
-
-//cria vetor ordenado
-void InsereVetorOrdenado(int *arr,int n){
-    int i;
-    for(i=0;i<n;i++){
-        arr[i]=i+1;
-    }
+        int i;
+        for (i = 0; i < n; i++)
+        {
+            arr[i] = i + 1;
+        }
 }
 // cria vetor invertido exp: 100,99,98,97...
 void InsereVetorInverso(int *arr,int n){
     int i;
-    for(i = n-1;i>=0;i--){
-        arr[i]=i+1;
+    for(i =n-1 ;i>=0;i--){
+        arr[i]=n-i;
     }
 }
 // cria vetor desordenado
@@ -251,13 +255,22 @@ void teste(int ordem,int tipo, int n){
     conta[0] =0;
     conta[1] = 0;
     double cpu_time ;
-    Preenche(vet,n,ordem);
-  cpu_time =  Escolhe(vet,n,tipo,conta);
-  //printf("tempo de cpu %lf",cpu_time);
-  //int i;
-  /*if(n < 101){
-    for(i = 0;i<n;i++)
-      printf("%d",vet[i]);}*/
+    Preenche(vet, n, ordem);
+   // int j;
+    /*if (n <= 100)
+    {
+        for (j = 0; j < n; j++)
+            printf("%d\n", vet[j]);
+    }*/
+    //puts("\n");
+    cpu_time = Escolhe(vet, n, tipo, conta);
+    
+   /*  if (n <= 100)
+    {
+        for (j = 0; j< n; j++)
+            printf("%d\n", vet[j]);
+    }*/
+    //printf("tempo de cpu %lf",cpu_time);
     resultado(cpu_time,conta,ordem,tipo,n);
 
 }
@@ -295,8 +308,9 @@ void resultado(double cptime, long  int conta[],  int ordenacao,int tipo,int len
    case 1:
        strcpy(ordem, "/resultado/ordenado/");
        break;
-   case 2:
-       strcpy(ordem, "/resultado/desordenado/");
+      
+
+    case 2 : strcpy(ordem, "/resultado/desordenado/");
        break;
    case 3:
        strcpy(ordem, "/resultado/decrescente/");
@@ -323,14 +337,10 @@ strcat(file_time,"Time.txt");
 
 //printf("%s\n",file_time);
 
-char aux[100];
 FILE *ft  = fopen(file_time,"a+");
-strcat(algoritmo,"\n");
 if(ft != NULL){
-    fgets(aux, 100, ft);
-    if (strcmp(aux,algoritmo) != 0)
-        fputs(algoritmo,ft);
-   fprintf(ft, "%d\t    %lf\n", length, cptime);
+   
+   fprintf(ft, "%d\t %lf\n", length, cptime);
     
 }
 fclose(ft);
@@ -346,9 +356,9 @@ char aux2[100];
 FILE * ftc = fopen(file_trocas, "a+");
 if(ftc != NULL){
     fgets(aux2,100,ftc);
-    if(strcmp(aux2,"comparacoes\t trocas\n")!=0)
-        fprintf(ftc, "comparacoes\t trocas\n");
-    fprintf(ftc,"%ld\t %ld\n",conta[0],conta[1]);
+    if(strcmp(aux2,"#comparacoes\t trocas\n")!=0)
+        fprintf(ftc, "#comparacoes\t trocas\n");
+    fprintf(ftc," %d\t %ld\t %ld\n",length,conta[0],conta[1]);
 }
 fclose(ftc);
 
@@ -358,12 +368,19 @@ void menu(){
 
  int ordem;
  int metodo;
+ int op;
  printf("######################################\n");
+ printf("|1 testa os algoritmos |2  Graficos do cpu-time |3 Graficos de Comparacoes |4 Grafico de Trocas \n");
+ scanf("%d",&op);
+switch(op){
+
+case 1:
 printf("escolha o tipo do vetor: 1:Ordenado |2: Desordenado |3:Decrescente\n");
 scanf("%d",&ordem);
 printf("\nescolha o metodo de ordenação: 1: BubbleSort|2: SelectSort |3: InsertSort|4: MergeSort|5: QuickSort\n");
 
 scanf("%d",&metodo);
+puts("\n");
 //printf("depois de pegar o valor %d",metodo);
  // para contar a quantidade de comparações 
 // para contar as trocas
@@ -385,7 +402,26 @@ teste(ordem,metodo,200000);
 teste(ordem,metodo,300000);
 teste(ordem,metodo,500000);
 teste(ordem,metodo,1000000);
+break;
 
+case 2: 
+    system("gnuplot-x11 -p scripts/timeOrdenado.gp ");
+    system("gnuplot-x11 -p scripts/timeRandom.gp ");
+    system("gnuplot-x11 -p scripts/timeDecrescente.gp ");
+    break;
+
+case 3:
+    system("gnuplot-x11 -p scripts/comparacao-Ordenado.gp ");
+    system("gnuplot-x11 -p scripts/comparacao-Random.gp ");
+    system("gnuplot-x11 -p scripts/comparacao-Decrescente.gp ");
+    break;
+case 4:
+    system("gnuplot -p scripts/trocas-Ordenado.gp ");
+    system("gnuplot -p scripts/trocas-Random.gp ");
+    system("gnuplot -p scripts/trocas-Decrescente.gp ");
+    break;
+  default:  puts("opcao invalida");  
+  }
 }
 
  
