@@ -416,9 +416,9 @@ case 3:
     system("gnuplot-x11 -p scripts/comparacao-Decrescente.gp ");
     break;
 case 4:
-    system("gnuplot -p scripts/trocas-Ordenado.gp ");
-    system("gnuplot -p scripts/trocas-Random.gp ");
-    system("gnuplot -p scripts/trocas-Decrescente.gp ");
+    system("gnuplot-x11 -p scripts/trocas-Ordenado.gp ");
+    system("gnuplot-x11 -p scripts/trocas-Random.gp ");
+    system("gnuplot-x11 -p scripts/trocas-Decrescente.gp ");
     break;
   default:  puts("opcao invalida");  
   }
